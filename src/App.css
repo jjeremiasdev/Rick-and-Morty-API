@@ -1,0 +1,354 @@
+/* ==========================================================
+   RICK AND MORTY - INTERDIMENSIONAL MOSAIC UI
+   ========================================================== */
+
+/* 1. IMPORTACIÓN DE FUENTES GOOGLE */
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Space+Mono:wght@400;700&display=swap');
+
+/* 2. VARIABLES GLOBALES (Combinando paletas) */
+:root {
+  /* Fondos del Espacio/Terminal */
+  --bg-primary: #090b10;
+  --bg-secondary: #12161f;
+  --bg-card: #181d27;
+  --bg-input: #050505;
+
+  /* Textos */
+  --text-primary: #eafcf4;
+  --text-secondary: #98a4b8;
+
+  /* Colores Rick & Morty */
+  --portal: #39ff14;         /* Verde Portal */
+  --science: #35d6ff;        /* Azul Ciencia */
+  --morty: #ffe14f;          /* Amarillo Morty */
+  
+  /* Bordes y Estructura */
+  --border: #2e3948;
+  --radius: 4px;             /* Bordes rectos tipo terminal */
+  --transition: 0.3s ease;
+}
+
+/* 3. RESET Y BODY (Con fondo reactivo) */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Space Mono', monospace;
+  color: var(--text-primary);
+  
+  /* Fondo holográfico con profundidad espacial */
+  background:
+    radial-gradient(circle at top, rgba(57, 255, 20, 0.08), transparent 40%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    var(--bg-primary);
+  background-size: auto, 40px 40px, 40px 40px, auto;
+  
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* EFECTO DE ESCANEO (Línea que atraviesa la pantalla) */
+body::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  top: -100%;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Permite hacer clic a través del escáner */
+  z-index: 50; /* Pasa por encima de las tarjetas pero debajo del modal */
+  background: linear-gradient(transparent, rgba(57, 255, 20, 0.07), transparent);
+  animation: scan 7s linear infinite;
+}
+
+/* 4. CONTENEDOR Y CABECERA */
+.app-container {
+  max-width: 1600px;
+  width: 98%;
+  margin: 0 auto;
+  padding: 10px 0;
+  position: relative;
+  z-index: 1;
+}
+
+header {
+  border-bottom: 2px solid var(--portal);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+}
+
+header h1 {
+  text-align: center;
+  font-family: 'Creepster', cursive;
+  color: var(--portal);
+  font-size: 3.5rem;
+  font-weight: normal;
+  letter-spacing: 3px;
+  margin: 10px 0;
+  /* Brillo atenuado según tu petición para que no sea molesto */
+  text-shadow: 2px 2px 0 #000, 0 0 8px rgba(57, 255, 20, 0.6);
+}
+
+/* 5. FILTROS Y PANEL DE CONTROL */
+.filters-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 15px 20px;
+  
+  /* Efecto de Panel de Control */
+  background: rgba(18, 22, 31, 0.6); /* --bg-secondary translúcido */
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6); /* Sombra interna para dar profundidad */
+  backdrop-filter: blur(4px); /* Difumina ligeramente el escáner que pasa por detrás */
+}
+
+.search-input, .status-select {
+  padding: 10px 16px;
+  background-color: var(--bg-primary); /* Fondo muy oscuro para el input */
+  border: 1px solid var(--border);
+  
+  /* El texto que escribes parece código de terminal */
+  color: var(--science); 
+  font-size: 0.95rem;
+  font-family: 'Space Mono', monospace;
+  
+  border-radius: var(--radius);
+  outline: none;
+  transition: all var(--transition);
+  min-width: 240px;
+  position: relative;
+  z-index: 60;
+}
+
+.search-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+/* Interacciones Hover */
+.search-input:hover, .status-select:hover {
+  border-color: rgba(53, 214, 255, 0.5); /* Borde cyan tenue al pasar el ratón */
+}
+
+/* Interacciones Focus (Cuando estás escribiendo) */
+.search-input:focus, .status-select:focus {
+  border-color: var(--science);
+  /* Resplandor doble: hacia afuera y hacia adentro del input */
+  box-shadow: 0 0 12px rgba(53, 214, 255, 0.25), 
+              inset 0 0 8px rgba(53, 214, 255, 0.15);
+  background-color: #000; /* Se oscurece al escribir para dar contraste al texto cyan */
+}
+
+/* Personalización del Select (Eliminamos el estilo por defecto del sistema operativo) */
+.status-select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  
+  /* Insertamos una flecha SVG personalizada en color Azul Ciencia */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2335d6ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  padding-right: 45px;
+}
+
+/* Estilo para las opciones desplegables */
+.status-select option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  font-family: 'Space Mono', monospace;
+}
+
+/* 6. GRID MOSAICO (Distribución compacta que ya teníamos) */
+.character-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+/* 7. TARJETAS COMPACTAS */
+.character-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+
+.character-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--portal);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+  z-index: 10;
+}
+
+.character-card img {
+  width: 100%;
+  height: 120px; /* Altura compacta */
+  object-fit: cover;
+  border-bottom: 1px solid var(--border);
+  filter: grayscale(15%) saturate(1.1);
+  transition: var(--transition);
+}
+
+.character-card:hover img {
+  filter: grayscale(0%) saturate(1.2);
+}
+
+.character-info {
+  padding: 6px;
+}
+
+.character-info h3 {
+  margin: 0 0 4px 0;
+  font-size: 0.9rem;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Space Mono', monospace;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 4px 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.status-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.status-indicator.alive { background-color: var(--portal); box-shadow: 0 0 5px var(--portal); }
+.status-indicator.dead { background-color: #ff3d57; box-shadow: 0 0 5px #ff3d57; }
+.status-indicator.unknown { background-color: var(--morty); }
+
+.detail {
+  margin: 2px 0;
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 8. BOTÓN CARGAR MÁS */
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.load-more-btn {
+  background: transparent;
+  color: var(--science);
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border: 2px solid var(--science);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.load-more-btn:hover:not(:disabled) {
+  background: rgba(53, 214, 255, 0.15);
+  color: white;
+  box-shadow: 0 0 15px rgba(53, 214, 255, 0.4);
+  transform: translateY(-3px);
+}
+
+/* 9. MODAL Y ESTADOS (Mensajes) */
+.loader, .error-message, .no-results {
+  text-align: center;
+  font-size: 1rem;
+  padding: 20px;
+  border: 1px dashed var(--border);
+  background-color: var(--bg-card);
+  width: fit-content;
+  margin: 20px auto;
+}
+.loader { color: var(--science); }
+.error-message { color: #ff3d57; }
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(9, 11, 16, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.modal-content {
+  background-color: var(--bg-card);
+  padding: 20px;
+  border: 2px solid var(--portal);
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+  position: relative;
+  max-width: 350px;
+  width: 100%;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.modal-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 2px solid var(--science);
+  margin-bottom: 10px;
+}
+
+.modal-content h2 {
+  font-family: 'Creepster', cursive;
+  color: var(--portal);
+  font-size: 2rem;
+  margin: 0 0 10px 0;
+  letter-spacing: 1px;
+}
+
+.modal-details p {
+  margin: 6px 0;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+.modal-details strong {
+  color: var(--science);
+}
+
+/* 10. KEYFRAMES */
+@keyframes scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(200%); }
+}
