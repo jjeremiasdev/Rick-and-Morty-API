@@ -1,5 +1,6 @@
 # 🛸 Rick and Morty API - React App
-
+Creador: Wilson Tandazo 
+License Creative Commons 
 ## Descripción de la aplicación
 Esta es una aplicación web desarrollada en React que consume la API REST pública de "Rick and Morty". Permite a los usuarios visualizar un listado completo de los personajes de la serie. La interfaz incluye un buscador en tiempo real para filtrar personajes por su nombre y un selector para filtrarlos según su estado vital (Alive, Dead, Unknown). Además, cuenta con un sistema de paginación/modal que permite hacer clic en cualquier personaje para visualizar información detallada adicional (origen, ubicación actual y cantidad de episodios en los que aparece).
 
